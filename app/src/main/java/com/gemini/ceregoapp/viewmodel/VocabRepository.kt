@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import retrofit2.HttpException
 
-class VocabRepository {
+open class VocabRepository {
 
-    private var movies = mutableListOf<Vocab>()
+    private var vocab = mutableListOf<Vocab>()
     private var mutableLiveData = MutableLiveData<List<Vocab>>()
     val completableJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.IO + completableJob)
@@ -31,8 +31,8 @@ class VocabRepository {
                     val response = request.await()
                     val mVocalWrapper = response;
                     if (mVocalWrapper != null && mVocalWrapper.response.sets != null) {
-                        movies = mVocalWrapper.response.sets as MutableList<Vocab>;
-                        mutableLiveData.value=movies;
+                        vocab = mVocalWrapper.response.sets as MutableList<Vocab>;
+                        mutableLiveData.value=vocab;
                     }
 
                 } catch (e: HttpException) {

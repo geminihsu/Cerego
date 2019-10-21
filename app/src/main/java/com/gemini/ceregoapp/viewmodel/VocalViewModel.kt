@@ -1,13 +1,19 @@
 package com.gemini.ceregoapp.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gemini.cerego.model.Vocab
 
-class VocalViewModel() : ViewModel() {
+open class VocalViewModel() : ViewModel() {
 
     val vocalRepository= VocabRepository()
-    val allVocab: LiveData<List<Vocab>> get() = vocalRepository.getMutableLiveData()
+
+    var allVocab = MutableLiveData<List<Vocab>>()
+
+    fun fetchVocab() {
+        allVocab = vocalRepository.getMutableLiveData()
+    }
 
     override fun onCleared() {
         super.onCleared()

@@ -23,11 +23,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mainViewModel = ViewModelProviders.of(this).get(VocalViewModel::class.java)
-        getPopularBlog()
+        getVocabList()
     }
 
-    fun getPopularBlog() {
-        mainViewModel!!.allVocab.observe(this, Observer {  vocabList ->
+    fun getVocabList() {
+        mainViewModel?.fetchVocab()
+        mainViewModel?.allVocab?.observe(this, Observer {  vocabList ->
             prepareRecyclerView(vocabList)
         })
 
