@@ -1,11 +1,11 @@
 package com.gemini.ceregoapp.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.gemini.cerego.model.*
-import io.reactivex.Observable
+
 import org.junit.Assert
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,24 +18,43 @@ class VocabViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    @Mock
-    lateinit var stubRepository: VocabRepository
-
-    @Spy // mock it partially
-    @InjectMocks
     lateinit var vocabviewModel : VocalViewModel
 
-    @Mock
-    lateinit var observer: Observer<List<Vocab>>
+    private var vocabData = MutableLiveData<List<Vocab>>()
 
 
     @Before
     fun before() {
         MockitoAnnotations.initMocks(this)
-        stubRepository = VocabRepository()
-        vocabviewModel = VocalViewModel()
-        vocabviewModel.allVocab.observeForever(observer)
+        vocabviewModel = Mockito.mock(VocalViewModel::class.java)
 
+        vocabData.postValue(listOf(
+            Vocab(
+                id = 123,
+                name = "aaa",
+                image = Image(
+                    id = 12,
+                    url = "123"
+                )
+            ),
+            Vocab(
+                id = 123,
+                name = "aaa",
+                image = Image(
+                    id = 12,
+                    url = "123"
+                )
+            ),
+            Vocab(
+                id = 123,
+                name = "aaa",
+                image = Image(
+                    id = 12,
+                    url = "123"
+                )
+            )
+        ))
+        `when`(vocabviewModel.allVocab).thenReturn(vocabData)
     }
 
     @Test
@@ -50,7 +69,23 @@ class VocabViewModelTest {
                 sets = listOf(
                     Vocab(
                         id = 123,
-                        name = "",
+                        name = "aaa",
+                        image = Image(
+                            id = 12,
+                            url = "123"
+                        )
+                    ),
+                    Vocab(
+                        id = 123,
+                        name = "aaa",
+                        image = Image(
+                            id = 12,
+                            url = "123"
+                        )
+                    ),
+                    Vocab(
+                        id = 123,
+                        name = "aaa",
                         image = Image(
                             id = 12,
                             url = "123"
@@ -61,11 +96,10 @@ class VocabViewModelTest {
         )
 
 
-       `when`(vocabviewModel.allVocab.value).thenReturn(responseBody.response.sets)
-        val newTask = stubRepository.getMutableLiveData().value?.first()
-
-        // Then a task is saved in the repository and the view updated
-        Assert.assertEquals(newTask?.name, null)
+        val newTask = vocabviewModel.allVocab
+        Assert.assertNotNull(newTask)
+        Assert.assertEquals(newTask.value?.size, responseBody.response.sets.size)
+        Assert.assertEquals(newTask.value, responseBody.response.sets)
 
     }
 }

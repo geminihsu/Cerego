@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import retrofit2.HttpException
 
-open class VocabRepository {
+class VocabRepository {
 
     private var vocab = mutableListOf<Vocab>()
     private var mutableLiveData = MutableLiveData<List<Vocab>>()
